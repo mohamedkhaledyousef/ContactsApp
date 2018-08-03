@@ -6,6 +6,7 @@ import * as ContactsAPI from './utils/ContactsAPI'
 
 class App extends Component {
   state = {
+    // screen : 'list',  //list or create
     contacts : [
       {
         "id": "ryan",
@@ -61,8 +62,16 @@ class App extends Component {
         "email": "fatema@reacttraining.com",
         "avatarURL": "http://localhost:3006/michael.jpg"
       }
-  ]
+    ]
 }
+
+  //to make API request
+  //componentDidMount Lifecycle Event
+  // componentDidMount(){
+  //   ContactsAPI.getAll().then((contacts) =>{
+  //     this.setState({contacts})
+  //   })
+  // }
 
   //Update State with setState
   removeContact = (contact) => {
@@ -70,11 +79,40 @@ class App extends Component {
       contacts: state.contacts.filter((c) => c.id !== contact.id)
     }))
   }
+    // ContactsAPI.remove(contact)
+
+  createContact(contact) {
+    ContactsAPI.create(contact).then(contact => {
+      this.setState(state => ({
+        contacts: state.contacts.concat([ contact ])
+      }))
+    })
+  }
 
   render() {
     return (
-      <div>
-        <ListContacts onDeleteContact={this.removeContact} contacts={this.state.contacts} />
+      <div className="app">
+        <Route exact path="/" render={() => (
+          <ListContacts
+            onDeleteContact={this.removeContact}
+            contacts={this.state.contacts}
+
+            // Test
+            // To create a new contact
+            // onNavigate={ () => {
+            //   this.setState({screen : 'create'})
+            // }}
+            />
+        )} />
+
+        <Route path='/create' render={({ history }) => (
+          <CreateContact
+            onCreateContact={(contact) => {
+              this.createContact(contact)
+              history.push('/')
+            }}
+            />
+          )} />
       </div>
     )
   }
