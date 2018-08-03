@@ -76,6 +76,14 @@ class ListContacts extends Component {
             onChange={(event) => this.updateQuery(event.target.value)}
             placeholder='Search contacts'
             />
+
+            //To create a new contact
+            <Link
+              to="/create"
+              // onClick={this.props.onNavigate}
+              className="add-contact"
+              >Add Contact
+            </Link>
         </div>
 
         {showingContacts.length !== this.props.contacts.length && (
